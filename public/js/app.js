@@ -2207,6 +2207,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.loading = false;
     })["catch"](function (error) {
       console.log('Unable to fetch posts');
+      _this.loading = false;
     });
   }
 });
