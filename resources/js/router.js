@@ -14,13 +14,15 @@ export default new VueRouter({
         {
             path: '/',
             name: 'home',
-            component: NewsFeed
+            component: NewsFeed,
+            meta: {title: 'Newsfeed'}
 
         },
         {
             path: '/users/:userId',
             name: 'user.show',
             component: UserShow,
+            meta: {title: 'Profile'}
 
         },
          
