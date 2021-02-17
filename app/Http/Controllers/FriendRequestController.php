@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\UserNotFoundException;
+use App\Exceptions\ValidationErrorException;
 use App\Http\Resources\Friend as FriendResource;
 use App\Friend;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 
 class FriendRequestController extends Controller
@@ -18,7 +20,7 @@ class FriendRequestController extends Controller
     {
         $data = request()->validate([
 
-            'friend_id' => ''
+            'friend_id' => 'required'
         ]);
 
         try{
