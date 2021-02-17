@@ -17,7 +17,7 @@ class Friend extends JsonResource
                 'friend_request_id'=> $this->id,              
                 'attributes'=>  [
 
-                    'confirmed_at'  => $this->confirmed_at,
+                    'confirmed_at'  => optional($this->confirmed_at)->diffForHumans(),
 
                 ]
             ],
