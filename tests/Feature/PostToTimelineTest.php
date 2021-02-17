@@ -16,6 +16,7 @@ class PostToTimelineTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->actingAs($user =  factory(User::class)->create(), 'api');
+        
         $response = $this->post('/api/posts', [
             "data" => [
                 "type" => "posts",
