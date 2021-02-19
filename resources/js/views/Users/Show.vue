@@ -5,7 +5,7 @@
         <div v-if="!userLoading" class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
                 <img src="https://i.stack.imgur.com/vhoa0.jpg" 
-                    alt="" class="object-cover w-full">
+                    alt="User Background Image" class="object-cover w-full">
             </div>
 
             <div class=" absolute flex  bottom-0 left-0 -mb-8 items-center ml-12 z-20">
@@ -15,8 +15,12 @@
                 <p class=" text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }} </p>
 
             </div>
-        </div>
 
+            <div class="absolute flex  bottom-0 right-0 mb-4 items-center mr-12 z-20">
+                <button class="px-3 py-1 bg-gray-400 rounded">Add Friend</button>
+            </div>
+        </div>
+ 
 
 
         <p v-if="postLoading">Loading posts ...</p>
@@ -29,6 +33,7 @@
 
 <script>
 import Post from '../../components/Post.vue';
+import {mapGetters} from 'vuex'
     
     export default {
         
@@ -39,10 +44,9 @@ import Post from '../../components/Post.vue';
         data: () =>{
 
             return {
-            
-                user: null,
+                
                 posts: null,
-                userLoading: true,
+              
                 postLoading: true,               
             }
 
@@ -50,18 +54,7 @@ import Post from '../../components/Post.vue';
 
         mounted(){
 
-            axios.get('/api/users/' + this.$route.params.userId )
-                .then(res => {
-
-                    this.user = res.data;
-                    this.userLoading= false;
-                    
-                })
-                
-                .catch(error  => {
-                    console.log('failed to fetch');
-                     this.userLoading= false;   
-                });
+           this.$store.dispatch('fetchUser', this.$route.params.userId); //userId coming from the route
 
             axios.get('/api/users/' + this.$route.params.userId + '/posts')
                 .then(res => {
@@ -79,6 +72,14 @@ import Post from '../../components/Post.vue';
                 });    
                 
     
+        },
+        computed: {
+
+            ...mapGetters({
+
+                  user: 'user', 
+            })
+
         }
 
 
