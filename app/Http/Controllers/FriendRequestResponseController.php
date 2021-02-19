@@ -18,17 +18,16 @@ class FriendRequestResponseController extends Controller
 
         $data = request()->validate([
 
-            'user_id' =>'required',
+            'user_id' => 'required',
             'status' => 'required'
         ]);
 
         try {
 
             $friendRequest = Friend::where('user_id', $data['user_id'])
-            ->where('friend_id', auth()->user()->id) //this line is very impotant as we making sure that friend id must match the authenticated id
-            ->firstOrFail();
-
-        }catch( ModelNotFoundException $e){
+                ->where('friend_id', auth()->user()->id) //this line is very impotant as we making sure that friend id must match the authenticated id
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
 
             throw new FriendRequestNotFoundException();
         }
@@ -36,9 +35,29 @@ class FriendRequestResponseController extends Controller
         $friendRequest->update(array_merge($data, [
             'confirmed_at' => now(),
         ]));
-        
+
         return new FriendResource($friendRequest);
+    }
 
+    public function destroy()
+    {
 
+        $data = request()->validate([
+
+            'user_id' => 'required',
+        ]);
+
+        try {
+
+            Friend::where('user_id', $data['user_id'])
+                ->where('friend_id', auth()->user()->id) //this line is very impotant as we making sure that friend id must match the authenticated id
+                ->firstOrFail()
+                ->delete();
+        } catch (ModelNotFoundException $e) {
+
+            throw new FriendRequestNotFoundException();
+        }
+
+        return response()->json([], 204);
     }
 }
