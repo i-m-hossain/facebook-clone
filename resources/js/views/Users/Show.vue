@@ -17,16 +17,21 @@
             </div>
 
             <div class="absolute flex  bottom-0 right-0 mb-4 items-center mr-12 z-20">
-                <button class="px-3 py-1 bg-gray-400 rounded">Add Friend</button>
+                <button v-if='friendButtonText' class="px-3 py-1 bg-gray-400 rounded"
+                    @click="$store.dispatch('sendFriendRequest',$route.params.userId)" >
+
+                    {{ friendButtonText }}
+                </button>
+                <p v-else class="px-3 py-1 bg-gray-400 rounded">
+                    Friends
+                </p>
             </div>
         </div>
  
-
-
         <p v-if="postLoading">Loading posts ...</p>
         <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post="post" />
         
-        <p v-if="!postLoading && posts.data.length <1"> There is no post</p>
+        <p v-if="!postLoading && posts.data.length < 1"> There is no post</p>
         
     </div> 
 </template>
@@ -54,7 +59,10 @@ import {mapGetters} from 'vuex'
 
         mounted(){
 
+           // check Modules/profile.js 
            this.$store.dispatch('fetchUser', this.$route.params.userId); //userId coming from the route
+
+            // fetching user posts
 
             axios.get('/api/users/' + this.$route.params.userId + '/posts')
                 .then(res => {
@@ -78,9 +86,10 @@ import {mapGetters} from 'vuex'
             ...mapGetters({
 
                   user: 'user', 
+                  friendButtonText: 'friendButtonText',
             })
 
-        }
+        },
 
 
     }

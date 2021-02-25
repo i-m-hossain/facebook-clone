@@ -110,6 +110,8 @@ class FriendsTest extends TestCase
                 'attributes' =>[
 
                     'confirmed_at' => $friendRequest->confirmed_at->diffForHumans(),
+                    'friend_id' => $friendRequest->friend_id,
+                    'user_id' => $friendRequest->user_id,
 
                 ]
             ],
