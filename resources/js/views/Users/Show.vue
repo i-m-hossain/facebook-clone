@@ -1,8 +1,7 @@
 <template>
-    <div class=" flex flex-col items-center" >
-
-        <div v-if="userLoading"> Loading User.. </div>
-        <div v-if="!userLoading" class="relative mb-8">
+    <div class=" flex flex-col items-center"  v-if="status.user === 'success' && user">
+       
+        <div class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
                 <img src="https://i.stack.imgur.com/vhoa0.jpg" 
                     alt="User Background Image" class="object-cover w-full">
@@ -13,7 +12,7 @@
                 <img src="https://snusercontent.global.ssl.fastly.net/member-profile-full/46/4274246_8809836.jpg" 
                 alt="Profile pricture" class="object-cover rounded-full h-32 w-32 shadow-lg border-4 border-gray-200">
                 <p class=" text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }} </p>
-
+    
             </div>
 
             <div class="absolute flex  bottom-0 right-0 mb-4 items-center mr-12 z-20">
@@ -39,10 +38,11 @@
             </div>
         </div>
  
-        <p v-if="postLoading">Loading posts ...</p>
+        <div v-if="status.posts ==='loading'">Loading posts ...</div> 
+        <div v-else-if="posts.length < 1"> No posts found. Get started...</div>
         <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post="post" />
         
-        <p v-if="!postLoading && posts.data.length < 1"> There is no post</p>
+        
         
     </div> 
 </template>
@@ -57,38 +57,14 @@ import {mapGetters} from 'vuex'
 
         name: "Show",
 
-        data: () =>{
-
-            return {
-                
-                posts: null,
-              
-                postLoading: true,               
-            }
-
-        },
-
         mounted(){
 
-           // check Modules/profile.js 
+           // fetching users (check actions in profile.js) 
            this.$store.dispatch('fetchUser', this.$route.params.userId); //userId coming from the route
 
             // fetching user posts
 
-            axios.get('/api/users/' + this.$route.params.userId + '/posts')
-                .then(res => {
-
-                    console.log("succes post");
-                    this.posts = res.data;
-                    this.postLoading= false;
-                    
-                    
-                })
-                .catch(error => {
-                    console.log('Unable to fetch posts');
-                    this.postLoading= false;
-                                 
-                });    
+            this.$store.dispatch('fetchUserPosts', this.$route.params.userId); 
                 
     
         },
@@ -97,6 +73,8 @@ import {mapGetters} from 'vuex'
             ...mapGetters({
 
                   user: 'user', 
+                  posts: 'posts',
+                  status: 'status',
                   friendButtonText: 'friendButtonText',
             })
 

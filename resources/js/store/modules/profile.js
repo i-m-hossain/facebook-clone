@@ -6,6 +6,8 @@ const state = {
 
     user: null,
     userStatus: null,
+    posts: null,
+    postsStatus: null,
 };
 
 // getters are just like computed property
@@ -15,7 +17,17 @@ const getters = {
         
         return state.user;
     },
-
+    posts: state => {
+      
+        return state.posts;
+    },
+    status: state => {
+        return {
+            user: state.userStatus,
+            posts: state.postsStatus,
+        }
+        
+    },
     friendship: state => {
     
         return state.user.data.attributes.friendship;
@@ -59,6 +71,25 @@ const actions = {
                       
             })
             
+    },
+
+    fetchUserPosts({ commit, dispatch }, userId) {
+
+        commit('setPostsStatus', 'loading');
+        axios.get('/api/users/' + userId + '/posts')
+            .then(res => {
+                    
+
+                    commit('setPosts', res.data);
+                    commit('setPostsStatus', 'success');
+                    
+                    
+                })
+                .catch(error => {
+                   
+                     commit('setPostsStatus', 'error');            
+                });   
+        
     },
     sendFriendRequest({commit, state}, friendId) {
         axios.post('/api/friend-request', { 'friend_id': friendId })
@@ -116,6 +147,14 @@ const mutations = {
         
         state.userStatus = status;
     },
+
+    setPostsStatus(state, status) {
+        state.postsStatus = status;
+    },
+
+    setPosts(state, posts) {
+        state.posts = posts;
+    }
     
 
 };
