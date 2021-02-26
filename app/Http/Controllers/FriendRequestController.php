@@ -9,6 +9,7 @@ use App\Friend;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+
 use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -26,7 +27,7 @@ class FriendRequestController extends Controller
         try{
 
             User::findOrFail($data['friend_id'])
-            ->friends()->attach(auth()->user());
+            ->friends()->syncWithoutDetaching(auth()->user());
 
         }catch(ModelNotFoundException $e){
 

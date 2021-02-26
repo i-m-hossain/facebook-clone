@@ -35,6 +35,10 @@ const getters = {
     //whenever the state is changed the button should be changed 
     friendButtonText: (state, getters, rootState) => {
 
+        if (rootState.User.user.data.user_id === state.user.data.user_id) {
+            return '';  
+        }
+
         if (getters.friendship === null) {           
             return 'Add Friend'
 
@@ -91,7 +95,12 @@ const actions = {
                 });   
         
     },
-    sendFriendRequest({commit, state}, friendId) {
+    sendFriendRequest({ commit, getters }, friendId) {
+        
+        if (getters.friendButtonText !== 'Add Friend') {
+            return;
+        }
+
         axios.post('/api/friend-request', { 'friend_id': friendId })
             .then(res => {
                 

@@ -55800,6 +55800,10 @@ var getters = {
   },
   //whenever the state is changed the button should be changed 
   friendButtonText: function friendButtonText(state, getters, rootState) {
+    if (rootState.User.user.data.user_id === state.user.data.user_id) {
+      return '';
+    }
+
     if (getters.friendship === null) {
       return 'Add Friend';
     } else if (getters.friendship.data.attributes.confirmed_at === null && getters.friendship.data.attributes.friend_id !== rootState.User.user.data.user_id) {
@@ -55836,7 +55840,12 @@ var actions = {
   },
   sendFriendRequest: function sendFriendRequest(_ref3, friendId) {
     var commit = _ref3.commit,
-        state = _ref3.state;
+        getters = _ref3.getters;
+
+    if (getters.friendButtonText !== 'Add Friend') {
+      return;
+    }
+
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/friend-request', {
       'friend_id': friendId
     }).then(function (res) {
