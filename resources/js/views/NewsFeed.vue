@@ -2,7 +2,7 @@
     <div class="flex flex-col items-center py-4">
         <NewPost />
 
-        <div v-if="newsStatus.newsPostsStatus === 'loading'" > Loading posts ...</div>
+         <div v-if="newsStatus.newsPostsStatus === 'loading'" > Loading posts ...</div>
        
         <Post v-else v-for="post in posts.data" :key="post.data.post_id" :post = "post"/>
         

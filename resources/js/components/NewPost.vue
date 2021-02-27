@@ -6,8 +6,11 @@
                     <img src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg" alt="profile image for user" class="w-8 h-8 object-cover rounded-full">
                 </div>
             </div>
-            <div class="flex-1 mx-4">
-                <input type="text" name="body" class="w-full pl-4 h-8 bg-gray-200 rounded-full focus:outline-none focus:shadow-outline text-sm" placeholder="Add a post">
+            <div class="flex-1 flex mx-4">
+                <input type="text" name="body" v-model="postMessage"
+                    class="w-full pl-4 h-8 bg-gray-200 rounded-full focus:outline-none focus:shadow-outline text-sm" 
+                    placeholder="Add a post">
+                <button @click="$store.dispatch('postMessage')" class="px-2 py-1 ml-2 bg-gray-200 rounded-full"> Post </button>
             </div>
             <div>
                 <button class="flex justify-center items-center rounded-full w-10 h-10 bg-gray-200">
@@ -20,8 +23,28 @@
 
 <script>
     export default {
-        name: "NewPost"
+        name: "NewPost",
+
+        computed:{
+
+            //this is a special computed property in order to  bind the data two way
+
+            postMessage: {
+
+                get(){
+
+                    return this.$store.getters.postMessage;
+                },
+                set(postMessage){
+                    this.$store.commit('updateMessage', postMessage);
+                }
+            }
+
+        
+        }
     }
+
+    
 </script>
 
 <style scoped>
