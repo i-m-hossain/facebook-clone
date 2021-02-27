@@ -10,7 +10,14 @@
                 <input type="text" name="body" v-model="postMessage"
                     class="w-full pl-4 h-8 bg-gray-200 rounded-full focus:outline-none focus:shadow-outline text-sm" 
                     placeholder="Add a post">
-                <button @click="$store.dispatch('postMessage')" class="px-2 py-1 ml-2 bg-gray-200 rounded-full"> Post </button>
+                <transition name="fade">
+                    <button v-if="postMessage" 
+                        @click="$store.dispatch('postMessage')" 
+                        class="px-2 py-1 ml-2 bg-gray-200 rounded-full"> 
+                        Post 
+                    </button>
+                </transition>    
+                
             </div>
             <div>
                 <button class="flex justify-center items-center rounded-full w-10 h-10 bg-gray-200">
@@ -22,6 +29,7 @@
 </template>
 
 <script>
+    import _ from 'lodash'
     export default {
         name: "NewPost",
 
@@ -35,9 +43,9 @@
 
                     return this.$store.getters.postMessage;
                 },
-                set(postMessage){
+                set: _.debounce(function(postMessage){
                     this.$store.commit('updateMessage', postMessage);
-                }
+                },300)
             }
 
         
@@ -48,5 +56,10 @@
 </script>
 
 <style scoped>
-
+    .fade-enter-active, .fade-leave-active{
+        transition: opacity .5s;
+    } 
+    .fade-enter, .fade-leave-to{
+        opacity: 0; 
+    }
 </style>
