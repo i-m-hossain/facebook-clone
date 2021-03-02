@@ -57,7 +57,8 @@
                         alt="profile image for user" class="w-8 h-8 object-cover rounded-full" >
                 </div>
                 <div class="ml-4 flex-1 flex">
-                    <input v-model="commentBody" type="text" class="w-full pl-4 h-8 bg-gray-200 rounded-lg focus:outline-none">
+                    <input v-model="commentBody" type="text" class="w-full pl-4 h-8 bg-gray-200 rounded-lg focus:outline-none"
+                        placeholder="write your comments">
                     <button  v-if="commentBody"
                         @click="$store.dispatch('commentPost', {body:commentBody, postId:post.data.post_id, postKey: $vnode.key}); commentBody=''"
                         class="bg-gray-200 ml-2 px-2 py-1 rounded-lg focus:outline-none">
