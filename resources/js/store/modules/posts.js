@@ -77,6 +77,9 @@ const actions = {
                 
             });
 
+    },
+    commentPost({commit, state}, data){
+
     }
 
 }  
