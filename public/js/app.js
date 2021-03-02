@@ -2231,6 +2231,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
   props: ['post'],
@@ -39096,12 +39097,25 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", [
-            _c("p", [
-              _vm._v(
-                _vm._s(_vm.post.data.attributes.comments.comment_count) +
-                  " comments"
-              )
-            ])
+            _c(
+              "button",
+              {
+                staticClass: "focus:outline-none",
+                on: {
+                  click: function($event) {
+                    _vm.comments = !_vm.comments
+                  }
+                }
+              },
+              [
+                _c("p", [
+                  _vm._v(
+                    _vm._s(_vm.post.data.attributes.comments.comment_count) +
+                      " comments"
+                  )
+                ])
+              ]
+            )
           ])
         ]
       ),
@@ -39227,7 +39241,17 @@ var render = function() {
                         "button",
                         {
                           staticClass:
-                            "bg-gray-200 ml-2 px-2 py-1 rounded-lg focus:outline-none"
+                            "bg-gray-200 ml-2 px-2 py-1 rounded-lg focus:outline-none",
+                          on: {
+                            click: function($event) {
+                              _vm.$store.dispatch("commentPost", {
+                                body: _vm.commentBody,
+                                postId: _vm.post.data.post_id,
+                                postKey: _vm.$vnode.key
+                              })
+                              _vm.commentBody = ""
+                            }
+                          }
                         },
                         [_vm._v("\n                    Post\n                ")]
                       )
@@ -56748,6 +56772,14 @@ var actions = {
   commentPost: function commentPost(_ref4, data) {
     var commit = _ref4.commit,
         state = _ref4.state;
+    axios.post('/api/posts/' + data.postId + '/comment', {
+      body: data.body
+    }).then(function (res) {
+      commit('pushComments', {
+        comments: res.data,
+        postKey: data.postKey
+      });
+    })["catch"](function (error) {});
   }
 };
 var mutations = {
@@ -56765,6 +56797,9 @@ var mutations = {
   },
   pushLikes: function pushLikes(state, data) {
     state.newsPosts.data[data.postKey].data.attributes.likes = data.likes;
+  },
+  pushComments: function pushComments(state, data) {
+    state.newsPosts.data[data.postKey].data.attributes.comments = data.comments;
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
