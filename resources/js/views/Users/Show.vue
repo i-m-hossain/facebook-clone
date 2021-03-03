@@ -3,14 +3,21 @@
        
         <div class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
-                <img src="https://i.stack.imgur.com/vhoa0.jpg" 
-                    alt="User Background Image" class="object-cover w-full">
+               <UploadableImage image-width="1200"
+                                 image-height="500"
+                                 location="cover"
+                                 alt="user background image"
+                                 classes="object-cover w-full"
+                                 :user-image="user.data.attributes.cover_image"/>
             </div>
 
             <div class=" absolute flex  bottom-0 left-0 -mb-8 items-center ml-12 z-20">
-
-                <img src="https://snusercontent.global.ssl.fastly.net/member-profile-full/46/4274246_8809836.jpg" 
-                alt="Profile pricture" class="object-cover rounded-full h-32 w-32 shadow-lg border-4 border-gray-200">
+                <UploadableImage image-width="1200"
+                                 image-height="500"
+                                 location="profile"
+                                 alt="user profile pricture"
+                                 classes="object-cover rounded-full h-32 w-32 shadow-lg border-4 border-gray-200"
+                                 :user-image="user.data.attributes.profile_image"/>
                 <p class=" text-2xl text-gray-100 ml-4">{{ user.data.attributes.name }} </p>
     
             </div>
@@ -48,12 +55,13 @@
 </template>
 
 <script>
+import UploadableImage from '../../components/UploadableImage';
 import Post from '../../components/Post.vue';
 import {mapGetters} from 'vuex'
     
     export default {
         
-        components: { Post },
+        components: { Post, UploadableImage },
 
         name: "Show",
 
