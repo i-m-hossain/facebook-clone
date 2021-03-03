@@ -2085,7 +2085,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dropzone */ "./node_modules/dropzone/dist/dropzone.js");
+/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dropzone__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2123,11 +2125,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NewPost",
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])({
+  data: function data() {
+    return {
+      dropzone: null
+    };
+  },
+  mounted: function mounted() {
+    this.dropzone = new dropzone__WEBPACK_IMPORTED_MODULE_1___default.a(this.$refs.postImage, this.settings);
+  },
+  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
     authUser: 'authUser'
   })), {}, {
     //this is a special computed property in order to  bind the data two way
@@ -2138,8 +2156,44 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       set: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (postMessage) {
         this.$store.commit('updateMessage', postMessage);
       }, 300)
+    },
+    settings: function settings() {
+      var _this = this;
+
+      return {
+        paramName: 'image',
+        url: 'api/posts',
+        acceptedFiles: 'image/*',
+        clickable: '.dz-clickable',
+        //enables button clickable 
+        autoProcessQueue: false,
+        //stop sending request ao=utomatically after dropping file
+        params: {
+          'width': 1000,
+          'height': 1000
+        },
+        headers: {
+          'X-CSRF-TOKEN': document.head.querySelector('meta[name=csrf-token]').content
+        },
+        //solving 500 Internal Server Error : "Undefined index: body"
+        sending: function sending(file, xhr, formData) {
+          formData.append('body', _this.$store.getters.postMessage);
+        },
+        success: function success(event, res) {
+          alert('success');
+        }
+      };
     }
-  })
+  }),
+  methods: {
+    postHandler: function postHandler() {
+      if (this.dropzone.getAcceptedFiles().length) {
+        this.dropzone.processQueue();
+      } else {
+        this.$store.dispatch('postMessage');
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -49552,11 +49606,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "px-2 py-1 ml-2 bg-gray-200 rounded-full",
-                    on: {
-                      click: function($event) {
-                        return _vm.$store.dispatch("postMessage")
-                      }
-                    }
+                    on: { click: _vm.postHandler }
                   },
                   [_vm._v(" \n                    Post \n                ")]
                 )
@@ -49570,14 +49620,15 @@ var render = function() {
         _c(
           "button",
           {
+            ref: "postImage",
             staticClass:
-              "flex justify-center items-center rounded-full w-10 h-10 bg-gray-200"
+              "dz-clickable flex justify-center items-center rounded-full w-10 h-10 bg-gray-200"
           },
           [
             _c(
               "svg",
               {
-                staticClass: "fill-current w-5 h-5",
+                staticClass: "dz-clickable fill-current w-5 h-5",
                 attrs: {
                   xmlns: "http://www.w3.org/2000/svg",
                   viewBox: "0 0 24 24"

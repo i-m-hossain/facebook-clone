@@ -48,7 +48,7 @@ class RetrievePostsTest extends TestCase
                             'attributes' =>     [
 
                                 'body' => $posts->last()->body,
-                                'image' => $posts->last()->image,
+                                'image' => url($posts->last()->image),
                                 'posted_at' => $posts->last()->created_at->diffForHumans()
                             ]
                         ]
@@ -63,7 +63,7 @@ class RetrievePostsTest extends TestCase
                             'attributes' =>     [
 
                                 'body' => $posts->first()->body,
-                                'image' => $posts->first()->image,
+                                'image' => url($posts->first()->image),
                                 'posted_at' => $posts->first()->created_at->diffForHumans() 
                              ]
                         ]

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 
+use App\Post;
 use App\Friend;
+use Intervention\Image\Facades\Image;
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\Post as PostResource;
-use App\Post;
 
 class PostController extends Controller
 {
@@ -35,9 +36,25 @@ class PostController extends Controller
         $data = request()->validate([
 
             'body' =>'',
+            'image' => '',
+            'width' => '',
+            'height' => ''
+
         ]);
 
-        $post = request()->user()->posts()-> create($data);
+        if(isset($data['image'])){
+            $image = $data['image']->store('post-images', 'public');
+
+            Image::make($data['image'])
+                ->fit($data['width'], $data['height'])
+                ->save(storage_path('app/public/post-images/'.$data['image']->hashName()));
+
+        }
+
+        $post = request()->user()->posts()-> create([
+            'body' => $data['body'],
+            'image' => 'storage/'.$image ?? null, //image or null
+        ]);
         return new PostResource($post);
     }
 }
