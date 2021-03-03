@@ -3,7 +3,7 @@
        
         <div class="relative mb-8">
             <div class="w-100 h-64 overflow-hidden z-10">
-               <UploadableImage image-width="1200"
+               <UploadableImage  image-width="1200"
                                  image-height="500"
                                  location="cover"
                                  alt="user background image"
@@ -12,8 +12,8 @@
             </div>
 
             <div class=" absolute flex  bottom-0 left-0 -mb-8 items-center ml-12 z-20">
-                <UploadableImage image-width="1200"
-                                 image-height="500"
+                <UploadableImage image-width="750"
+                                 image-height="750"
                                  location="profile"
                                  alt="user profile pricture"
                                  classes="object-cover rounded-full h-32 w-32 shadow-lg border-4 border-gray-200"

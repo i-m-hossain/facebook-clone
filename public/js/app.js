@@ -50109,8 +50109,8 @@ var render = function() {
               [
                 _c("UploadableImage", {
                   attrs: {
-                    "image-width": "1200",
-                    "image-height": "500",
+                    "image-width": "750",
+                    "image-height": "750",
                     location: "profile",
                     alt: "user profile pricture",
                     classes:
