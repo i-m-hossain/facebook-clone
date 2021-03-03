@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img :src= "imageObject.data.attributes.path"
+        <img :src= "userImage.data.attributes.path"
              :alt="alt"
              ref="userImage"
              :class="classes">
@@ -27,14 +27,16 @@
         data: () => {
             return {
                 dropzone: null,
-                uploadedImage: null,
+            
             }
         },
+        
 
         mounted() {
-            //if (this.authUser.data.user_id.toString() === this.$route.params.userId) {
+            //if user is not authenticated, he cant open dropzone
+            if (this.authUser.data.user_id.toString() === this.$route.params.userId) {
                 this.dropzone = new Dropzone(this.$refs.userImage, this.settings);
-            //}
+            }
         },
 
         computed: {
@@ -57,17 +59,14 @@
                     },
                     success: (e, res) => {
                         
-                        this.uploadedImage = res
-                        // this.$store.dispatch('fetchAuthUser');
-                        // this.$store.dispatch('fetchUser', this.$route.params.userId);
-                        // this.$store.dispatch('fetchUserPosts', this.$route.params.userId);
+                        //this three line says if image is uploaded then refrsh all the components in this page  
+                        this.$store.dispatch('fetchAuthUser');
+                        this.$store.dispatch('fetchUser', this.$route.params.userId);
+                        this.$store.dispatch('fetchUserPosts', this.$route.params.userId);
                     }
                 };
             },
-            imageObject(){ //returns proper object to show
-                return this.uploadedImage || this.userImage; //either one of them will be returned
-
-            }
+            
         }
     }
 </script>
