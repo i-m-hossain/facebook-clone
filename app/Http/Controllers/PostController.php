@@ -2,59 +2,50 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Post;
 use App\Friend;
-use Intervention\Image\Facades\Image;
-use App\Http\Resources\PostCollection;
 use App\Http\Resources\Post as PostResource;
+use App\Http\Resources\PostCollection;
+use App\Post;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
-    
     public function index()
     {
         $friends = Friend::friendships();
 
-        //if a user have no friends retrieves only his post
-        if($friends->isEmpty()){
-
+        if ($friends->isEmpty()) {
             return new PostCollection(request()->user()->posts);
         }
 
-        //if user have friends retieves all the posts
         return new PostCollection(
-
             Post::whereIn('user_id', [$friends->pluck('user_id'), $friends->pluck('friend_id')])
                 ->get()
-        );        
-        
+        );
     }
 
-    public function store(){
-
+    public function store()
+    {
         $data = request()->validate([
-
-            'body' =>'',
+            'body' => '',
             'image' => '',
             'width' => '',
-            'height' => ''
-
+            'height' => '',
         ]);
 
-        if(isset($data['image'])){
+        if (isset($data['image'])) {
             $image = $data['image']->store('post-images', 'public');
 
             Image::make($data['image'])
                 ->fit($data['width'], $data['height'])
-                ->save(storage_path('app/public/post-images/'.$data['image']->hashName()));
-
+                ->save(storage_path('app/public/post-images/' . $data['image']->hashName()));
         }
 
-        $post = request()->user()->posts()-> create([
+        $post = request()->user()->posts()->create([
             'body' => $data['body'],
-            'image' => 'storage/'.$image ?? null, //image or null
+            'image' => $image ?? null,
         ]);
+
         return new PostResource($post);
     }
 }

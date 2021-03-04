@@ -70,13 +70,14 @@ const actions = {
     postMessage({commit, state}) {
 
         commit('setPostsStatus', 'loading');
-
+        
         axios.post('/api/posts', { body: state.postMessage })
               .then(res => {
-                
+                  console.log('success post !!!')
                   commit('pushPost', res.data);
                   commit('setPostsStatus', 'success');
                   commit('updateMessage', '');
+
             })
         
             .catch(error => {

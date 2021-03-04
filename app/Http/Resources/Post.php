@@ -24,7 +24,7 @@ class Post extends JsonResource
                     'posted_by' => new UserResource($this->user),
                     'likes' => new LikeCollection($this->likes),
                     'comments' => new CommentCollection($this->comments),
-                    'image' => url($this->image),
+                    'image' =>  $this->image ? env('APP_URL').'/storage/'.$this->image : '', //url is not working thats why this mess :)
                     'body'  => $this->body,
                     'posted_at' => $this->created_at->diffForHumans(),
                 ]

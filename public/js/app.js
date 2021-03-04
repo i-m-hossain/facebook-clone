@@ -2085,15 +2085,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dropzone */ "./node_modules/dropzone/dist/dropzone.js");
-/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dropzone__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dropzone */ "./node_modules/dropzone/dist/dropzone.js");
+/* harmony import */ var dropzone__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dropzone__WEBPACK_IMPORTED_MODULE_2__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2143,12 +2151,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   mounted: function mounted() {
-    this.dropzone = new dropzone__WEBPACK_IMPORTED_MODULE_1___default.a(this.$refs.postImage, this.settings);
+    this.dropzone = new dropzone__WEBPACK_IMPORTED_MODULE_2___default.a(this.$refs.postImage, this.settings);
   },
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapGetters"])({
+  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])({
     authUser: 'authUser'
   })), {}, {
-    //this is a special computed property in order to  bind the data two way
     postMessage: {
       get: function get() {
         return this.$store.getters.postMessage;
@@ -2162,12 +2169,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return {
         paramName: 'image',
-        url: 'api/posts',
+        url: '/api/posts',
         acceptedFiles: 'image/*',
         clickable: '.dz-clickable',
-        //enables button clickable 
         autoProcessQueue: false,
-        //stop sending request ao=utomatically after dropping file
+        maxFiles: 1,
+        previewsContainer: '.dropzone-previews',
+        previewTemplate: document.querySelector('#dz-template').innerHTML,
         params: {
           'width': 1000,
           'height': 1000
@@ -2175,13 +2183,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         headers: {
           'X-CSRF-TOKEN': document.head.querySelector('meta[name=csrf-token]').content
         },
-        //solving 500 Internal Server Error : "Undefined index: body"
         sending: function sending(file, xhr, formData) {
           formData.append('body', _this.$store.getters.postMessage);
         },
         success: function success(event, res) {
-          alert('success');
-        }
+          _this.dropzone.removeAllFiles();
+
+          _this.$store.commit('pushPost', res);
+        } // maxfilesexceeded: file => {
+        //     this.dropzone.removeAllFiles();
+        //     this.dropzone.addFile(file);
+
       };
     }
   }),
@@ -2189,9 +2201,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     postHandler: function postHandler() {
       if (this.dropzone.getAcceptedFiles().length) {
         this.dropzone.processQueue();
+        console.log('with image');
       } else {
-        this.$store.dispatch('postMessage');
+        this.$store.dispatch('postMessage'); //  console.log('without image!!')
       }
+
+      this.$store.commit('updateMessage', '');
     }
   }
 });
@@ -7044,7 +7059,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".fade-enter-active[data-v-4f84dfc5], .fade-leave-active[data-v-4f84dfc5]{\n  transition: opacity .5s;\n}\n.fade-enter[data-v-4f84dfc5], .fade-leave-to[data-v-4f84dfc5]{\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, ".fade-enter-active[data-v-4f84dfc5], .fade-leave-active[data-v-4f84dfc5] {\n  transition: opacity .5s;\n}\n.fade-enter[data-v-4f84dfc5], .fade-leave-to[data-v-4f84dfc5] {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -49605,10 +49620,10 @@ var render = function() {
               ? _c(
                   "button",
                   {
-                    staticClass: "px-2 py-1 ml-2 bg-gray-200 rounded-full",
+                    staticClass: "bg-gray-200 ml-2 px-3 py-1 rounded-full",
                     on: { click: _vm.postHandler }
                   },
-                  [_vm._v(" \n                    Post \n                ")]
+                  [_vm._v("Post\n                ")]
                 )
               : _vm._e()
           ])
@@ -49646,10 +49661,43 @@ var render = function() {
           ]
         )
       ])
-    ])
+    ]),
+    _vm._v(" "),
+    _vm._m(0)
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "dropzone-previews" }, [
+      _c("div", { staticClass: "hidden", attrs: { id: "dz-template" } }, [
+        _c("div", { staticClass: "dz-preview dz-file-preview mt-4" }, [
+          _c("div", { staticClass: "dz-details" }, [
+            _c("img", {
+              staticClass: "w-32 h-32",
+              attrs: { "data-dz-thumbnail": "" }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              { staticClass: "text-xs", attrs: { "data-dz-remove": "" } },
+              [_vm._v("REMOVE")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "dz-progress" }, [
+            _c("span", {
+              staticClass: "dz-upload",
+              attrs: { "data-dz-upload": "" }
+            })
+          ])
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -49715,7 +49763,7 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _vm.post.data.attributes.image
+      _vm.post.data.attributes.image.length
         ? _c("div", { staticClass: "w-full" }, [
             _c("img", {
               staticClass: "w-full",
@@ -67498,6 +67546,7 @@ var actions = {
     axios.post('/api/posts', {
       body: state.postMessage
     }).then(function (res) {
+      console.log('success post !!!');
       commit('pushPost', res.data);
       commit('setPostsStatus', 'success');
       commit('updateMessage', '');

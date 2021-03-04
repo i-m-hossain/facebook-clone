@@ -27,7 +27,7 @@ class UserImageController extends Controller
 
 
         $userImage = auth()->user()->images()->create([
-            'path' => 'storage/'.$image,
+            'path' => $image,
             'width' => $data['width'],
             'height' => $data['height'],
             'location' => $data['location'],
