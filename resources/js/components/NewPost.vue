@@ -101,9 +101,10 @@
 
                         this.$store.commit('pushPost', res);
                     },
-                    // maxfilesexceeded: file => {
-                    //     this.dropzone.removeAllFiles();
-                    //     this.dropzone.addFile(file);
+                    maxfilesexceeded: file => {
+                        this.dropzone.removeAllFiles();
+                        this.dropzone.addFile(file);
+                    }    
                 };
             }
         },

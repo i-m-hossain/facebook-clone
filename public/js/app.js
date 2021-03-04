@@ -2190,10 +2190,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.dropzone.removeAllFiles();
 
           _this.$store.commit('pushPost', res);
-        } // maxfilesexceeded: file => {
-        //     this.dropzone.removeAllFiles();
-        //     this.dropzone.addFile(file);
+        },
+        maxfilesexceeded: function maxfilesexceeded(file) {
+          _this.dropzone.removeAllFiles();
 
+          _this.dropzone.addFile(file);
+        }
       };
     }
   }),
